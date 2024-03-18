@@ -16,7 +16,6 @@ public class MainKassa {
         String nimi;
         String tuotenimi = " ";
         int tuoteMaara;
-        double saldo = 0.0;
         boolean tuoteLoydetty;
         boolean ostajaLoytyi = false;
         double loppusumma = 0;
@@ -25,12 +24,7 @@ public class MainKassa {
         
 
         
-        ArrayList<Maksukortti> maksukortit = new ArrayList<>();
         ArrayList<Tuote> ostetutTuotteet = new ArrayList<>();
-        ArrayList<Kuitti> kuitit = new ArrayList<>();
-        
-        
-        
         Properties connConfig = new Properties();
         connConfig.setProperty("user", "root");
         connConfig.setProperty("password", "T13t0k4!?t4");
@@ -61,7 +55,7 @@ P‰‰toiminto 2: Poistu ohjelmasta
 	    			while(!tuotenimi.equals("")) {
 	    				
 	    				for(Tuote tuote : ostetutTuotteet) {
-	    					tuote.tulostaTuote();;
+	    					tuote.tulostaTuote();
 	    				}
 	    				System.out.println("Yhtens‰: "+loppusumma+ "Ä");
 	    				tuoteLoydetty = false;
