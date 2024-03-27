@@ -19,8 +19,11 @@ public class MainKassa {
         boolean tuoteLoydetty;
         boolean ostajaLoytyi = false;
         double loppusumma = 0;
+        double maksettavana;
         double haettuSaldo;
         int kuittitunnus = 0;
+        int maksutapa;
+        double kateinen;
         
 
         
@@ -88,35 +91,70 @@ P‰‰toiminto 2: Poistu ohjelmasta
 	    					}
 	    			}
 	    			
+	    			
+	    			
+	    			maksettavana = loppusumma;
+	    			
+	    			while(maksettavana > 0) {
 	    				
-			    	System.out.println("Kuka ostaa?");
-			    	nimi = lukija.nextLine();
-			    	haettuSaldo = 0.0;
-			    	ostajaLoytyi = false;
+	    			System.out.println("Maksettavana " +maksettavana+ "Ä");
+	    			System.out.println("Valitse maksutapa");
+	    			maksutapa = lukija.nextInt();
+	    			lukija.nextLine();
+	    			
+	    			if(maksutapa == 1) {
+				    	System.out.println("Kuka ostaa?");
+				    	nimi = lukija.nextLine();
+				    	haettuSaldo = 0.0;
 			    	
 
-    		        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/kokeilutietokanta", connConfig)) {
-		             	PreparedStatement stmt = conn.prepareStatement("select * from pankki where nimi=?");
-		            	stmt.setString(1, nimi);
-		            	ResultSet ostajatiedot = stmt.executeQuery(); 
-		                while (ostajatiedot.next()) {
-		                	
-		        			if(ostajatiedot.getString("nimi").equals(nimi)) {
-		        				
-		        				ostajaLoytyi = true;
-		        				haettuSaldo = ostajatiedot.getDouble("saldo");
-		        			}
-		                }
+	    		        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/kokeilutietokanta", connConfig)) {
+			             	PreparedStatement stmt = conn.prepareStatement("select * from pankki where nimi=?");
+			            	stmt.setString(1, nimi);
+			            	ResultSet ostajatiedot = stmt.executeQuery(); 
+			                while (ostajatiedot.next()) {
+			                	
+			        			if(ostajatiedot.getString("nimi").equals(nimi)) {
+			        				
+			        				ostajaLoytyi = true;
+			        				haettuSaldo = ostajatiedot.getDouble("saldo");
+			        			}
+			                }
+	    		        }
+	    		        catch (Exception e) {
+	    		            e.printStackTrace();
+	    		        }
 		                
 		                
-		                if(ostajaLoytyi == true) {
-		                stmt = conn.prepareStatement("UPDATE pankki SET saldo=? WHERE nimi=?");
-		                stmt.setDouble(1, (haettuSaldo - loppusumma));
-		                stmt.setString(2, nimi);
-		                stmt.executeQuery();
-		              
-		             
-		                stmt = conn.prepareStatement("INSERT INTO kuitti (kokonaishinta) VALUES (?)");
+				                if(ostajaLoytyi == true) {
+				                	
+				                try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/kokeilutietokanta", connConfig)) {
+				                PreparedStatement stmt = conn.prepareStatement("UPDATE pankki SET saldo=? WHERE nimi=?");
+				                stmt.setDouble(1, (haettuSaldo - maksettavana));
+				                stmt.setString(2, nimi);
+				                stmt.executeQuery();
+				                maksettavana = 0;
+				                }
+				                catch (Exception e) {
+			    		            e.printStackTrace();
+			    		        }
+				                }
+	    			
+    		        
+	    				}  
+		    			
+		    			if(maksutapa == 2) {
+		    				System.out.print("K‰teinen: ");
+		    				kateinen = lukija.nextDouble();
+		    				lukija.nextLine();
+		    				maksettavana -= kateinen;
+		    				}
+	    			}
+	    			
+	    			
+	    			
+	    				try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/kokeilutietokanta", connConfig)) {
+	    				PreparedStatement stmt = conn.prepareStatement("INSERT INTO kuitti (kokonaishinta) VALUES (?)");
 		                stmt.setDouble(1, loppusumma);
 		                stmt.executeQuery();
 		                
@@ -145,9 +183,9 @@ P‰‰toiminto 2: Poistu ohjelmasta
 		                
 		                }
 		                
-		         
+        	
 		                    
-		        } catch (Exception e) {
+	    			catch (Exception e) {
 		            e.printStackTrace();
 		        }
 
