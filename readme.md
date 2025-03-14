@@ -1,41 +1,41 @@
-# Java kassap��te
+# Java kassapääte
 
-## 1. Mist� on kyse?
+## 1. Mistä on kyse?
 
-Javalla tehty kassap��tesovellus, joka on samanlainen kuin toinen tekem�ni projekti, jossa on Java-ohjelmoinkieli k�yt�ss�. Ohjelmalla pyrin tekem��n sovellusken mik� voisi k�ytt�� kassap��tteiss� esimerkiksi ruokakaupassa.
-Ohjelmalle sy�tet��n tuotteita ja, kun on valmis, siirryt��n maksuosioon.
+Javalla tehty kassapäätesovellus, joka on samanlainen kuin toinen tekemäni projekti, jossa on Java-ohjelmoinkieli käytössä. Ohjelmalla pyrin tekemään sovellusken mikä voisi käyttää kassapäätteissä esimerkiksi ruokakaupassa.
+Ohjelmalle syötetään tuotteita ja, kun on valmis, siirrytään maksuosioon.
 
 Ohjelma tallentaa kuitit, kun ostokset on tehty.
 
-Tuotteet, kuitit sek� maksukortit ovat MariaDb-tietokannassa.
+Tuotteet, kuitit sekä maksukortit ovat MariaDb-tietokannassa.
 
 ## 2. Rajoitukset
 
-Ohjelma on rajoitettu tuotteiden k�sittelyyn ja ostamiseen vaikka kaupalla voisi my�s esimerkiksi olla kaupan henkil�st�n hallinta.
+Ohjelma on rajoitettu tuotteiden käsittelyyn ja ostamiseen vaikka kaupalla voisi myös esimerkiksi olla kaupan henkilöstön hallinta.
 
-Tuotteet sy�tet��n k�sin verrattuna, ett� kassap��tteess� olisi viivakoodinlukija.
+Tuotteet syötetään käsin verrattuna, että kassapäätteessä olisi viivakoodinlukija.
 
-Pankki tietokanta l�hinn� esitt�� pankin tietokantaa, johon otettaisiin yheytt� maksun aikana, jos k�ytet��n maksukortteja.
+Pankki tietokanta lähinnä esittää pankin tietokantaa, johon otettaisiin yheyttä maksun aikana, jos käytetään maksukortteja.
 
 ## 3. Tietokannan rakenne
 
 ...
 
-## 3. Ohjelman k�ytt��notto
+## 3. Ohjelman käyttöönotto
 
 ### 3.1 Tietokannan asennus
 
-Ohjelma k�ytt�� MariaDB-tietokantaj�rjestelm��, p��ohjelmassa sy�tet��n alussa tietokannasta osat tiedoista, jotka ovat k�ytt�nimi, salasana, verkkokone / ip-osoite, portti sek� tietokannan nimi:
+Ohjelma käyttää MariaDB-tietokantajärjestelmää, pääohjelmassa syötetään alussa tietokannasta osat tiedoista, jotka ovat käyttäjän nimi, salasana, verkkokone / ip-osoite, portti sekä tietokannan nimi:
 
-	    Properties connConfig = new Properties();
-        connConfig.setProperty("user", "root");
-        connConfig.setProperty("password", "T13t0k4!?t4");
+        Properties connConfig = new Properties();
+        connConfig.setProperty("user", "käyttäjä");
+        connConfig.setProperty("password", "salasana");
         
-Kun, tietokantaan otetaan yhteytt�, sy�tet��n seuraavaan k�skyt loput tiedot, verkkokone / ip-osoite, portti sek� tietokannan nimi:
+Kun, tietokantaan otetaan yhteyttä, syötetään seuraavaan käskyt loput tiedot, verkkokone / ip-osoite, portti sekä tietokannan nimi:
 
 		(Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/kokeilutietokanta", connConfig)
 		
-connConfig on Properties-muuttujan nimi, johon sy�tet��n k�ytt�j�nimi ja salasana
+connConfig on Properties-muuttujan nimi, johon syötetään käyttäjän nimi ja salasana
 
 ### 3.2 Taulukkojen luonti ja esiluotujen tietojen sy�tt�
 
@@ -55,10 +55,10 @@ VALUES
 CREATE TABLE tuote(
 tuotetunniste INT PRIMARY KEY AUTO_INCREMENT,
 tuotenimi VARCHAR(30) NOT NULL,
-yksikk�hinta DECIMAL(6,2) NOT NULL
+yksikköhinta DECIMAL(6,2) NOT NULL
 );
 
-INSERT INTO tuote (tuotenimi, yksikk�hinta)
+INSERT INTO tuote (tuotenimi, yksikköhinta)
 VALUES
 ('Kurkku', 0.48),
 ('Tomaatti', 1.29),
@@ -75,7 +75,7 @@ CREATE TABLE ostettu_tuote(
 tunnus INT PRIMARY KEY AUTO_INCREMENT,
 kuittitunnus INT NOT NULL,
 tuotetunnus INT NOT NULL,
-tuotem��r� INT NOT NULL,
+tuotemäärä INT NOT NULL,
 FOREIGN KEY (kuittitunnus) REFERENCES kuitti(kuittitunnus),
 FOREIGN KEY (tuotetunnus) REFERENCES tuote(tuotetunniste)
 );
