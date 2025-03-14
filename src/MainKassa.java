@@ -26,26 +26,26 @@ public class MainKassa {
         double kateinen;
         
 
-        
+
         ArrayList<Tuote> ostetutTuotteet = new ArrayList<>();
         Properties connConfig = new Properties();
-        connConfig.setProperty("user", "root");
-        connConfig.setProperty("password", "T13t0k4!?t4");
+        connConfig.setProperty("user", "kÃ¤yttÃ¤jÃ¤");
+        connConfig.setProperty("password", "salasana");
         
 
         
         
     	/*
-Päätoiminto 1: Asiakkaan ostotapahtuma
+Pï¿½ï¿½toiminto 1: Asiakkaan ostotapahtuma
 	
-Päätoiminto 2: Poistu ohjelmasta
+Pï¿½ï¿½toiminto 2: Poistu ohjelmasta
     	 
     	 */
         
         while (toiminto != 2) {
         	
-        	System.out.print("\nPäätoiminto 1: Ostotapahtuma\n"
-        			+ "Päätoiminto 2: Poista ohjelmasta\n");
+        	System.out.print("\nPï¿½ï¿½toiminto 1: Ostotapahtuma\n"
+        			+ "Pï¿½ï¿½toiminto 2: Poista ohjelmasta\n");
         	toiminto = lukija.nextInt();
         	lukija.nextLine();
         	
@@ -60,14 +60,14 @@ Päätoiminto 2: Poistu ohjelmasta
 	    				for(Tuote tuote : ostetutTuotteet) {
 	    					tuote.tulostaTuote();
 	    				}
-	    				System.out.println("Yhtensä: "+loppusumma+ "€");
+	    				System.out.println("Yhtensï¿½: "+loppusumma+ "ï¿½");
 	    				tuoteLoydetty = false;
 	    				
 	    				
-	    				System.out.println("Mitä tuotetta ostetaan? ");
+	    				System.out.println("Mitï¿½ tuotetta ostetaan? ");
 	    				tuotenimi = lukija.nextLine();
 	    				
-	    		        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/kokeilutietokanta", connConfig)) {
+	    		        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/pankki_kauppa", connConfig)) {
 	    		             	PreparedStatement stmt = conn.prepareStatement("select * from tuote where tuotenimi=?");
 	    		            	stmt.setString(1, tuotenimi);
 	    		            	ResultSet tuotetiedot = stmt.executeQuery(); 
@@ -77,8 +77,8 @@ Päätoiminto 2: Poistu ohjelmasta
 	    								System.out.println("Paljonko ostetaan: ");
 	    								tuoteMaara = lukija.nextInt();
 	    								lukija.nextLine();
-	    								ostetutTuotteet.add(new Tuote(tuotetiedot.getInt("tuotetunniste"), tuotetiedot.getString("tuotenimi"), tuotetiedot.getDouble("yksikköhinta"), tuoteMaara));
-	    								loppusumma += (tuotetiedot.getDouble("yksikköhinta")*tuoteMaara);
+	    								ostetutTuotteet.add(new Tuote(tuotetiedot.getInt("tuotetunniste"), tuotetiedot.getString("tuotenimi"), tuotetiedot.getDouble("yksikkï¿½hinta"), tuoteMaara));
+	    								loppusumma += (tuotetiedot.getDouble("yksikkï¿½hinta")*tuoteMaara);
 	    								tuoteLoydetty = true;
 	    							}
 	    		                    
@@ -97,7 +97,7 @@ Päätoiminto 2: Poistu ohjelmasta
 	    			
 	    			while(maksettavana > 0) {
 	    				
-	    			System.out.println("Maksettavana " +maksettavana+ "€");
+	    			System.out.println("Maksettavana " +maksettavana+ "ï¿½");
 	    			System.out.println("Valitse maksutapa");
 	    			maksutapa = lukija.nextInt();
 	    			lukija.nextLine();
@@ -108,7 +108,7 @@ Päätoiminto 2: Poistu ohjelmasta
 				    	haettuSaldo = 0.0;
 			    	
 
-	    		        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/kokeilutietokanta", connConfig)) {
+	    		        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/pankki_kauppa", connConfig)) {
 			             	PreparedStatement stmt = conn.prepareStatement("select * from pankki where nimi=?");
 			            	stmt.setString(1, nimi);
 			            	ResultSet ostajatiedot = stmt.executeQuery(); 
@@ -128,7 +128,7 @@ Päätoiminto 2: Poistu ohjelmasta
 		                
 				                if(ostajaLoytyi == true) {
 				                	
-				                try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/kokeilutietokanta", connConfig)) {
+				                try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/pankki_kauppa", connConfig)) {
 				                PreparedStatement stmt = conn.prepareStatement("UPDATE pankki SET saldo=? WHERE nimi=?");
 				                stmt.setDouble(1, (haettuSaldo - maksettavana));
 				                stmt.setString(2, nimi);
@@ -144,7 +144,7 @@ Päätoiminto 2: Poistu ohjelmasta
 	    				}  
 		    			
 		    			if(maksutapa == 2) {
-		    				System.out.print("Käteinen: ");
+		    				System.out.print("Kï¿½teinen: ");
 		    				kateinen = lukija.nextDouble();
 		    				lukija.nextLine();
 		    				maksettavana -= kateinen;
@@ -153,7 +153,7 @@ Päätoiminto 2: Poistu ohjelmasta
 	    			
 	    			
 	    			
-	    				try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/kokeilutietokanta", connConfig)) {
+	    				try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/pankki_kauppa", connConfig)) {
 	    				PreparedStatement stmt = conn.prepareStatement("INSERT INTO kuitti (kokonaishinta) VALUES (?)");
 		                stmt.setDouble(1, loppusumma);
 		                stmt.executeQuery();
@@ -166,7 +166,7 @@ Päätoiminto 2: Poistu ohjelmasta
 	    	              }
 	    	            
 	    	            for (Tuote tuote : ostetutTuotteet) {
-			                stmt = conn.prepareStatement("INSERT INTO ostettu_tuote (kuittitunnus, tuotetunnus, tuotemäärä) values (?, ?, ?)");
+			                stmt = conn.prepareStatement("INSERT INTO ostettu_tuote (kuittitunnus, tuotetunnus, tuotemï¿½ï¿½rï¿½) values (?, ?, ?)");
 			                stmt.setInt(1, kuittitunnus);
 			                stmt.setInt(2, tuote.haeTuotetunniste());
 			                stmt.setInt(3, tuote.haeOstosMaara());
@@ -179,7 +179,7 @@ Päätoiminto 2: Poistu ohjelmasta
 	    	                tuote.tulostaTuote();
 	    	            	}
 
-	    	            System.out.println("\nLoppusumma: " +loppusumma+ "€");
+	    	            System.out.println("\nLoppusumma: " +loppusumma+ "ï¿½");
 		                
 		                }
 		                
@@ -204,12 +204,12 @@ Päätoiminto 2: Poistu ohjelmasta
     		case 5:
     			System.out.println("Tulosta korttien tiedot");
     			
-    	        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/kokeilutietokanta", connConfig)) {
+    	        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/pankki_kauppa", connConfig)) {
     	            try (Statement stmt = conn.createStatement()) {
     	                try (ResultSet tilitiedot = stmt.executeQuery("SELECT * FROM pankki")) {
     	                    while (tilitiedot.next()) {
     	                    	
-    	                    	System.out.println(tilitiedot.getString("tunniste")+ " " +tilitiedot.getString("nimi")+ " " +tilitiedot.getString("saldo")+ "€");
+    	                    	System.out.println(tilitiedot.getString("tunniste")+ " " +tilitiedot.getString("nimi")+ " " +tilitiedot.getString("saldo")+ "ï¿½");
     	                    }
     	                }
     	            }
@@ -219,12 +219,12 @@ Päätoiminto 2: Poistu ohjelmasta
     	        
     			System.out.println("\n\nTulosta kuitit");
     			
-    	        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/kokeilutietokanta", connConfig)) {
+    	        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/pankki_kauppa", connConfig)) {
     	            try (Statement stmt = conn.createStatement()) {
     	                try (ResultSet kuittitiedot = stmt.executeQuery("SELECT * FROM kuitti")) {
     	                    while (kuittitiedot.next()) {
     	                    	
-    	                    	System.out.println(kuittitiedot.getInt("kuittitunnus")+ " " +kuittitiedot.getTimestamp("osto_aika")+ " " +kuittitiedot.getDouble("kokonaishinta")+ "€");
+    	                    	System.out.println(kuittitiedot.getInt("kuittitunnus")+ " " +kuittitiedot.getTimestamp("osto_aika")+ " " +kuittitiedot.getDouble("kokonaishinta")+ "ï¿½");
     	                    }
     	                }
     	            }

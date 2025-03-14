@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/media/marko/00B426F1B426E8BC/Tietokone projektit/mariadb-java-client-3.5.2.jar"
+    ]
+}
