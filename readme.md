@@ -1,43 +1,43 @@
-# Java kassapääte
+# Java kassapï¿½ï¿½te
 
-## 1. Mistä on kyse?
+## 1. Mistï¿½ on kyse?
 
-Javalla tehty kassapäätesovellus, joka on samanlainen kuin toinen tekemäni projekti, jossa on Python-ohjelmoinkieli käytössä. Ohjelmalla pyrin tekemään sovellusken mikä voisi käyttää kassapäätteissä esimerkiksi ruokakaupassa.
-Ohjelmalle syötetään tuotteita ja, kun on valmis, siirrytään maksuosioon.
+Javalla tehty kassapï¿½ï¿½tesovellus, joka on samanlainen kuin toinen tekemï¿½ni projekti, jossa on Java-ohjelmoinkieli kï¿½ytï¿½ssï¿½. Ohjelmalla pyrin tekemï¿½ï¿½n sovellusken mikï¿½ voisi kï¿½yttï¿½ï¿½ kassapï¿½ï¿½tteissï¿½ esimerkiksi ruokakaupassa.
+Ohjelmalle syï¿½tetï¿½ï¿½n tuotteita ja, kun on valmis, siirrytï¿½ï¿½n maksuosioon.
 
 Ohjelma tallentaa kuitit, kun ostokset on tehty.
 
-Tuotteet, kuitit sekä maksukortit ovat MariaDb-tietokannassa.
+Tuotteet, kuitit sekï¿½ maksukortit ovat MariaDb-tietokannassa.
 
 ## 2. Rajoitukset
 
-Ohjelma on rajoitettu tuotteiden käsittelyyn ja ostamiseen vaikka kaupalla voisi myös esimerkiksi olla kaupan henkilöstön hallinta.
+Ohjelma on rajoitettu tuotteiden kï¿½sittelyyn ja ostamiseen vaikka kaupalla voisi myï¿½s esimerkiksi olla kaupan henkilï¿½stï¿½n hallinta.
 
-Tuotteet syötetään käsin verrattuna, että kassapäätteessä olisi viivakoodinlukija.
+Tuotteet syï¿½tetï¿½ï¿½n kï¿½sin verrattuna, ettï¿½ kassapï¿½ï¿½tteessï¿½ olisi viivakoodinlukija.
 
-Pankki tietokanta lähinnä esittää pankin tietokantaa, johon otettaisiin yheyttä maksun aikana, jos käytetään maksukortteja.
+Pankki tietokanta lï¿½hinnï¿½ esittï¿½ï¿½ pankin tietokantaa, johon otettaisiin yheyttï¿½ maksun aikana, jos kï¿½ytetï¿½ï¿½n maksukortteja.
 
 ## 3. Tietokannan rakenne
 
 ...
 
-## 3. Ohjelman käyttöönotto
+## 3. Ohjelman kï¿½yttï¿½ï¿½notto
 
 ### 3.1 Tietokannan asennus
 
-Ohjelma käyttää MariaDB-tietokantajärjestelmää, pääohjelmassa syötetään alussa tietokannasta osat tiedoista, jotka ovat käyttänimi, salasana, verkkokone / ip-osoite, portti sekä tietokannan nimi:
+Ohjelma kï¿½yttï¿½ï¿½ MariaDB-tietokantajï¿½rjestelmï¿½ï¿½, pï¿½ï¿½ohjelmassa syï¿½tetï¿½ï¿½n alussa tietokannasta osat tiedoista, jotka ovat kï¿½yttï¿½nimi, salasana, verkkokone / ip-osoite, portti sekï¿½ tietokannan nimi:
 
 	    Properties connConfig = new Properties();
         connConfig.setProperty("user", "root");
         connConfig.setProperty("password", "T13t0k4!?t4");
         
-Kun, tietokantaan otetaan yhteyttä, syötetään seuraavaan käskyt loput tiedot, verkkokone / ip-osoite, portti sekä tietokannan nimi:
+Kun, tietokantaan otetaan yhteyttï¿½, syï¿½tetï¿½ï¿½n seuraavaan kï¿½skyt loput tiedot, verkkokone / ip-osoite, portti sekï¿½ tietokannan nimi:
 
 		(Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/kokeilutietokanta", connConfig)
 		
-connConfig on Properties-muuttujan nimi, johon syötetään käyttäjänimi ja salasana
+connConfig on Properties-muuttujan nimi, johon syï¿½tetï¿½ï¿½n kï¿½yttï¿½jï¿½nimi ja salasana
 
-### 3.2 Taulukkojen luonti ja esiluotujen tietojen syöttö
+### 3.2 Taulukkojen luonti ja esiluotujen tietojen syï¿½ttï¿½
 
 CREATE TABLE pankki(
 tunniste INT PRIMARY KEY AUTO_INCREMENT,
@@ -55,10 +55,10 @@ VALUES
 CREATE TABLE tuote(
 tuotetunniste INT PRIMARY KEY AUTO_INCREMENT,
 tuotenimi VARCHAR(30) NOT NULL,
-yksikköhinta DECIMAL(6,2) NOT NULL
+yksikkï¿½hinta DECIMAL(6,2) NOT NULL
 );
 
-INSERT INTO tuote (tuotenimi, yksikköhinta)
+INSERT INTO tuote (tuotenimi, yksikkï¿½hinta)
 VALUES
 ('Kurkku', 0.48),
 ('Tomaatti', 1.29),
@@ -75,7 +75,7 @@ CREATE TABLE ostettu_tuote(
 tunnus INT PRIMARY KEY AUTO_INCREMENT,
 kuittitunnus INT NOT NULL,
 tuotetunnus INT NOT NULL,
-tuotemäärä INT NOT NULL,
+tuotemï¿½ï¿½rï¿½ INT NOT NULL,
 FOREIGN KEY (kuittitunnus) REFERENCES kuitti(kuittitunnus),
 FOREIGN KEY (tuotetunnus) REFERENCES tuote(tuotetunniste)
 );
