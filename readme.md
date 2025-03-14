@@ -2,7 +2,7 @@
 
 ## 1. Mistä on kyse?
 
-Javalla tehty kassapäätesovellus, joka on samanlainen kuin toinen tekemäni projekti, jossa on Java-ohjelmoinkieli käytössä. Ohjelmalla pyrin tekemään sovellusken mikä voisi käyttää kassapäätteissä esimerkiksi ruokakaupassa.
+Javalla tehty kassapäätesovellus, joka on samanlainen kuin toinen tekemäni projekti, jossa on Python-ohjelmoinkieli käytössä. Ohjelmalla pyrin tekemään sovellusken mikä voisi käyttää kassapäätteissä esimerkiksi ruokakaupassa.
 Ohjelmalle syötetään tuotteita ja, kun on valmis, siirrytään maksuosioon.
 
 Ohjelma tallentaa kuitit, kun ostokset on tehty.
