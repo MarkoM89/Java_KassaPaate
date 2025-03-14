@@ -37,7 +37,7 @@ Kun, tietokantaan otetaan yhteyttä, syötetään seuraavaan käskyt loput tiedo
 		
 connConfig on Properties-muuttujan nimi, johon syötetään käyttäjän nimi ja salasana
 
-### 3.2 Taulukkojen luonti ja esiluotujen tietojen sy�tt�
+### 3.2 Taulukkojen luonti ja esiluotujen tietojen syöttö
 
 CREATE TABLE pankki(
 tunniste INT PRIMARY KEY AUTO_INCREMENT,
