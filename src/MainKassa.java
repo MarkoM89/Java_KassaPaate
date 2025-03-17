@@ -1,8 +1,6 @@
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -14,7 +12,7 @@ public class MainKassa {
         Scanner lukija = new Scanner(System.in);
         int toiminto = 0;
         String nimi;
-        String tuotenimi = " ";
+        int tuotenimi = -1;
         int tuoteMaara;
         boolean tuoteLoydetty;
         boolean ostajaLoytyi = false;
@@ -36,49 +34,52 @@ public class MainKassa {
         
         
     	/*
-P��toiminto 1: Asiakkaan ostotapahtuma
+Päätoiminto 1: Asiakkaan ostotapahtuma
 	
-P��toiminto 2: Poistu ohjelmasta
+Päätoiminto 2: Poistu ohjelmasta
     	 
     	 */
         
         while (toiminto != 2) {
         	
-        	System.out.print("\nP��toiminto 1: Ostotapahtuma\n"
-        			+ "P��toiminto 2: Poista ohjelmasta\n");
+        	System.out.print("\nPäätoiminto 1: Ostotapahtuma\n"
+        			+ "Päätoiminto 2: Poista ohjelmasta\n");
         	toiminto = lukija.nextInt();
         	lukija.nextLine();
         	
         	switch(toiminto) {
     		case 1:
     			
-	    	        tuotenimi = " ";
+	    	        tuotenimi = -1;
 	    	        loppusumma = 0;
 	    			
-	    			while(!tuotenimi.equals("")) {
+	    			while(tuotenimi != 0) {
 	    				
 	    				for(Tuote tuote : ostetutTuotteet) {
 	    					tuote.tulostaTuote();
 	    				}
-	    				System.out.println("Yhtens�: "+loppusumma+ "�");
+	    				System.out.println("Yhtensä: "+loppusumma+ "€");
 	    				tuoteLoydetty = false;
 	    				
 	    				
-	    				System.out.println("Mit� tuotetta ostetaan? ");
-	    				tuotenimi = lukija.nextLine();
+	    				System.out.println("Mitä tuotetta ostetaan? ");
+	    				tuotenimi = lukija.nextInt();
+						lukija.nextLine();
 	    				
 	    		        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/pankki_kauppa", connConfig)) {
-	    		             	PreparedStatement stmt = conn.prepareStatement("select * from tuote where tuotenimi=?");
-	    		            	stmt.setString(1, tuotenimi);
+	    		             	PreparedStatement stmt = conn.prepareStatement("select * from tuote where tuotetunniste=?");
+	    		            	stmt.setInt(1, tuotenimi);
 	    		            	ResultSet tuotetiedot = stmt.executeQuery(); 
 	    		                while (tuotetiedot.next()) 
 	    		                	
-	    							if(tuotetiedot.getString("tuotenimi").equals(tuotenimi)) {
+	    							if(tuotetiedot.getInt("tuotetunniste") == tuotenimi) {
+
+										System.out.println(tuotetiedot.getString("tuotenimi")+ " " +tuotetiedot.getDouble("yksikköhinta"));
 	    								System.out.println("Paljonko ostetaan: ");
 	    								tuoteMaara = lukija.nextInt();
 	    								lukija.nextLine();
-	    								ostetutTuotteet.add(new Tuote(tuotetiedot.getInt("tuotetunniste"), tuotetiedot.getString("tuotenimi"), tuotetiedot.getDouble("yksikk�hinta"), tuoteMaara));
-	    								loppusumma += (tuotetiedot.getDouble("yksikk�hinta")*tuoteMaara);
+	    								ostetutTuotteet.add(new Tuote(tuotetiedot.getInt("tuotetunniste"), tuotetiedot.getString("tuotenimi"), tuotetiedot.getDouble("yksikköhinta"), tuoteMaara));
+	    								loppusumma += (tuotetiedot.getDouble("yksikköhinta")*tuoteMaara);
 	    								tuoteLoydetty = true;
 	    							}
 	    		                    
@@ -86,7 +87,7 @@ P��toiminto 2: Poistu ohjelmasta
 	    		            e.printStackTrace();
 	    		        }
 	    		        
-	    	            if (tuoteLoydetty == false && !tuotenimi.equals("")){
+	    	            if (tuoteLoydetty == false && tuotenimi != 0){
 	                        System.out.println("Tuotetta ei ole valikoimassa");
 	    					}
 	    			}
@@ -97,7 +98,7 @@ P��toiminto 2: Poistu ohjelmasta
 	    			
 	    			while(maksettavana > 0) {
 	    				
-	    			System.out.println("Maksettavana " +maksettavana+ "�");
+	    			System.out.println("Maksettavana " +maksettavana+ "€");
 	    			System.out.println("Valitse maksutapa");
 	    			maksutapa = lukija.nextInt();
 	    			lukija.nextLine();
@@ -144,7 +145,7 @@ P��toiminto 2: Poistu ohjelmasta
 	    				}  
 		    			
 		    			if(maksutapa == 2) {
-		    				System.out.print("K�teinen: ");
+		    				System.out.print("Käteinen: ");
 		    				kateinen = lukija.nextDouble();
 		    				lukija.nextLine();
 		    				maksettavana -= kateinen;
@@ -166,7 +167,7 @@ P��toiminto 2: Poistu ohjelmasta
 	    	              }
 	    	            
 	    	            for (Tuote tuote : ostetutTuotteet) {
-			                stmt = conn.prepareStatement("INSERT INTO ostettu_tuote (kuittitunnus, tuotetunnus, tuotem��r�) values (?, ?, ?)");
+			                stmt = conn.prepareStatement("INSERT INTO ostettu_tuote (kuittitunnus, tuotetunnus, tuotemäärä) values (?, ?, ?)");
 			                stmt.setInt(1, kuittitunnus);
 			                stmt.setInt(2, tuote.haeTuotetunniste());
 			                stmt.setInt(3, tuote.haeOstosMaara());
@@ -179,7 +180,7 @@ P��toiminto 2: Poistu ohjelmasta
 	    	                tuote.tulostaTuote();
 	    	            	}
 
-	    	            System.out.println("\nLoppusumma: " +loppusumma+ "�");
+	    	            System.out.println("\nLoppusumma: " +loppusumma+ "€");
 		                
 		                }
 		                
@@ -209,7 +210,7 @@ P��toiminto 2: Poistu ohjelmasta
     	                try (ResultSet tilitiedot = stmt.executeQuery("SELECT * FROM pankki")) {
     	                    while (tilitiedot.next()) {
     	                    	
-    	                    	System.out.println(tilitiedot.getString("tunniste")+ " " +tilitiedot.getString("nimi")+ " " +tilitiedot.getString("saldo")+ "�");
+    	                    	System.out.println(tilitiedot.getString("tunniste")+ " " +tilitiedot.getString("nimi")+ " " +tilitiedot.getString("saldo")+ "€");
     	                    }
     	                }
     	            }
@@ -224,7 +225,7 @@ P��toiminto 2: Poistu ohjelmasta
     	                try (ResultSet kuittitiedot = stmt.executeQuery("SELECT * FROM kuitti")) {
     	                    while (kuittitiedot.next()) {
     	                    	
-    	                    	System.out.println(kuittitiedot.getInt("kuittitunnus")+ " " +kuittitiedot.getTimestamp("osto_aika")+ " " +kuittitiedot.getDouble("kokonaishinta")+ "�");
+    	                    	System.out.println(kuittitiedot.getInt("kuittitunnus")+ " " +kuittitiedot.getTimestamp("osto_aika")+ " " +kuittitiedot.getDouble("kokonaishinta")+ "€");
     	                    }
     	                }
     	            }
