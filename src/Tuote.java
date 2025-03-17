@@ -32,7 +32,7 @@ public class Tuote {
 	
 	
 	public void tulostaTuote() {
-		System.out.println(this.nimi+ " " +this.hinta+ "€");
+		System.out.println(this.nimi+ " " +this.hinta+ "â‚¬");
 	}
 
 }
